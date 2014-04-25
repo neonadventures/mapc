@@ -3,13 +3,14 @@
 ##############################################
 ## HELP
 ##############################################
+PROGRAM_NAME=$(basename $0)
 if [ $# -lt 1 ]
   then
     echo "Usage: "
-    echo "    compile [output folder path] [bounds]"
+    echo "    $PROGRAM_NAME [output folder path] [bounds]"
     echo "Example: "
-    echo "    compile output -8.0042,31.6103,-7.9697,31.6459"
-    echo "    cat bounds/marrakech.bounds | compile output"
+    echo "    $PROGRAM_NAME output -8.0042,31.6103,-7.9697,31.6459"
+    echo "    cat bounds/marrakech.bounds | $PROGRAM_NAME output"
     exit
 fi
 
