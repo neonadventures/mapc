@@ -57,16 +57,6 @@ function install-tilemill {
   brew cask install tilemill
 }
 
-function map-export {
-  CWD=$(pwd)
-  cd $(dirname $2)
-  TILEMILL_PATH=/opt/homebrew-cask/Caskroom/tilemill/0.10.1/TileMill.app/Contents/Resources
-  $TILEMILL_PATH/node $TILEMILL_PATH/index.js export $1 $(basename $2) --bbox=$3 --format=mbtiles --minzoom=$4 --maxzoom=$5
-  rm *.export
-  rm *.export-failed
-  cd $CWD
-}
-
 function install-postgis {
   brew install postgis
 }
@@ -109,6 +99,15 @@ function cleanup-map {
   rm $1
 }
 
+function map-export {
+  CWD=$(pwd)
+  cd $(dirname $2)
+  TILEMILL_PATH=/opt/homebrew-cask/Caskroom/tilemill/0.10.1/TileMill.app/Contents/Resources
+  $TILEMILL_PATH/node $TILEMILL_PATH/index.js export $1 $(basename $2) --bbox=$3 --format=mbtiles --minzoom=$4 --maxzoom=$5
+  rm *.export
+  rm *.export-failed
+  cd $CWD
+}
 
 ##############################################
 ## BEGIN PROGRAM
