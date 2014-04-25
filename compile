@@ -1,32 +1,77 @@
 #!/bin/bash
 
-read bounds
+##############################################
+## HELP
+##############################################
+if [ $# -lt 1 ]
+  then
+    echo "Usage: "
+    echo "    compile [output folder path] [bounds]"
+    echo "Example: "
+    echo "    compile output -8.0042,31.6103,-7.9697,31.6459"
+    echo "    cat bounds/marrakech.bounds | compile output"
+    exit
+fi
 
-OUTPUT_PATH=$1
+##############################################
+## INPUT PARAMETERS
+##############################################
 
-OSM_FILE="map.osm"
-OSM_PATH="$OUTPUT_PATH/$OSM_FILE"
+if [ $# -lt 2 ]
+  then
+    read BOUNDS
+    OUTPUT_PATH=$1
+fi
 
-echo "Outputting to path $OUTPUT_PATH"
+if [ $# -eq 2 ]
+  then
+    BOUNDS=$1
+    OUTPUT_PATH=$2
+fi
 
-echo "Installing OSM Scout..."
-brew install neonadventures/neon/libosmscout
+OSMFILE="map.osm"
+OSMPATH="$OUTPUT_PATH/$OSMFILE"
 
-cp /usr/local/Cellar/libosmscout/0.1/share/*.oss $OUTPUT_PATH
-cp /usr/local/Cellar/libosmscout/0.1/share/*.ost $OUTPUT_PATH
+##############################################
+## FUNCTIONS
+##############################################
 
-echo "Downloading OSM Data..."
-url="http://api.openstreetmap.org/api/0.6/map?bbox=$bounds"
-wget -O $OSM_PATH $url 2>&1
+function install-osm-scout {
+  brew install neonadventures/neon/libosmscout
+}
 
-cd $OUTPUT_PATH
+function import-dependencies {
+  cp /usr/local/Cellar/libosmscout/0.1/share/*.oss $1
+  cp /usr/local/Cellar/libosmscout/0.1/share/*.ost $1
+}
 
-echo "Reformatting OSM Data..."
-fixosm $OSM_FILE $OSM_FILE
+function download-map {
+  url="http://api.openstreetmap.org/api/0.6/map?bbox=$1"
+  wget -O $2 $url 2>&1
+}
 
-echo "Creating Route Data..."
-osmscout-import $OSM_FILE
+function format-map {
+  fixosm $1 $1
+}
 
-cd ..
+function export-routes {
+  CWD=$(pwd)
+  cd $1
+  osmscout-import $2
+  cd $CWD
+}
 
-rm $OSM_PATH
+function delete-map {
+  rm $1
+}
+
+##############################################
+## BEGIN PROGRAM
+##############################################
+
+install-osm-scout
+download-map $BOUNDS $OSMPATH
+format-map $OSMPATH
+import-dependencies $OUTPUT_PATH
+export-routes $OUTPUT_PATH $OSMFILE
+delete-map $OSMPATH
