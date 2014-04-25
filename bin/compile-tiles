@@ -48,15 +48,6 @@ function download-map {
   wget -O $2 $url 2>&1
 }
 
-function install-brew-cask {
-  brew tap phinze/cask
-  brew install brew-cask
-}
-
-function install-tilemill {
-  brew cask install tilemill
-}
-
 function download-osmbright {
   CWD=$(pwd)
   wget -O /tmp/osm-bright.zip https://github.com/mapbox/osm-bright/zipball/master
@@ -94,7 +85,7 @@ function cleanup-map {
 function map-export {
   CWD=$(pwd)
   cd $(dirname $2)
-  TILEMILL_PATH=/opt/homebrew-cask/Caskroom/tilemill/0.10.1/TileMill.app/Contents/Resources
+  TILEMILL_PATH=~/Applications/TileMill.app/Contents/Resources
   $TILEMILL_PATH/node $TILEMILL_PATH/index.js export $1 $(basename $2) --bbox=$3 --format=mbtiles --minzoom=$4 --maxzoom=$5
   rm *.export
   rm *.export-failed
@@ -104,9 +95,6 @@ function map-export {
 ##############################################
 ## BEGIN PROGRAM
 ##############################################
-
-install-brew-cask
-install-tilemill
 
 create-databases osm
 download-map $BOUNDS $OSMPATH
