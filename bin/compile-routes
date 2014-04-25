@@ -37,10 +37,6 @@ OSMPATH="$OUTPUT_PATH/$OSMFILE"
 ## FUNCTIONS
 ##############################################
 
-function install-osm-scout {
-  brew install neonadventures/neon/libosmscout
-}
-
 function import-dependencies {
   cp /usr/local/Cellar/libosmscout/0.1/share/*.oss $1
   cp /usr/local/Cellar/libosmscout/0.1/share/*.ost $1
@@ -70,7 +66,6 @@ function delete-map {
 ## BEGIN PROGRAM
 ##############################################
 
-install-osm-scout
 download-map $BOUNDS $OSMPATH
 format-map $OSMPATH
 import-dependencies $OUTPUT_PATH
