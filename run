@@ -1,0 +1,32 @@
+#!/bin/bash
+
+read bounds
+
+OUTPUT_PATH=$1
+
+OSM_FILE="map.osm"
+OSM_PATH="$OUTPUT_PATH/$OSM_FILE"
+
+echo "Outputting to path $OUTPUT_PATH"
+
+echo "Installing OSM Scout..."
+brew install neonadventures/neon/libosmscout
+
+cp /usr/local/Cellar/libosmscout/0.1/share/*.oss $OUTPUT_PATH
+cp /usr/local/Cellar/libosmscout/0.1/share/*.ost $OUTPUT_PATH
+
+echo "Downloading OSM Data..."
+url="http://api.openstreetmap.org/api/0.6/map?bbox=$bounds"
+wget -O $OSM_PATH $url 2>&1
+
+cd $OUTPUT_PATH
+
+echo "Reformatting OSM Data..."
+fixosm $OSM_FILE $OSM_FILE
+
+echo "Creating Route Data..."
+osmscout-import $OSM_FILE
+
+cd ..
+
+rm $OSM_PATH
