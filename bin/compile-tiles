@@ -57,14 +57,6 @@ function install-tilemill {
   brew cask install tilemill
 }
 
-function install-postgis {
-  brew install postgis
-}
-
-function install-osm2pgsql {
-  brew install osm2pgsql
-}
-
 function download-osmbright {
   CWD=$(pwd)
   wget -O /tmp/osm-bright.zip https://github.com/mapbox/osm-bright/zipball/master
@@ -115,8 +107,6 @@ function map-export {
 
 install-brew-cask
 install-tilemill
-install-postgis
-install-osm2pgsql
 
 create-databases osm
 download-map $BOUNDS $OSMPATH
